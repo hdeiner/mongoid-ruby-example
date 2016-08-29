@@ -197,6 +197,7 @@ Song.new(artist: 'Bobbie Gentry'                      , title: 'I''ll Never Fall
 Song.new(artist: 'The Archies'                        , title: 'Sugar, Sugar'                                           , date: '10/25/69', weeksAtNumberOne: 8).save!
 Song.new(artist: 'Rolf Harris'                        , title: 'Two Little Boys'                                        , date: '12/20/69', weeksAtNumberOne: 6).save!
 
+puts "\nSongs that enjoyed the most number of weeks at number one by year\n\n"
 years = Song.distinct(:year)
 years.each{ |year|
   songs = Song.where(year: year)
@@ -206,5 +207,16 @@ years.each{ |year|
     puts "Year " + year + " artist " + song.artist.ljust(15," ") + " title " + song.title.ljust(35," ") + " weeksAtNumberOne " + song.weeksAtNumberOne.to_s
   }
 }
+
+puts "\nTop 10 artists with the most number of songs on the charts 1960-1969\n\n"
+artists = Song.distinct(:artist)
+songsToArtist = Hash.new {|k,v| v}
+artists.each{ |artist| songsToArtist[artist] = Song.where(artist: artist).length }
+songsToArtist = songsToArtist.sort_by{|k,v| v}.reverse
+rank = 1
+while (rank <11) do
+  puts "Rank " + rank.to_s.ljust(2," ") + " artist " + songsToArtist[rank-1][0].ljust(30," ") + " number of songs " + songsToArtist[rank-1][1].to_s
+  rank += 1
+end
 
 Song.collection.drop()
