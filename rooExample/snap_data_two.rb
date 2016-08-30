@@ -9,7 +9,6 @@ class SnapDataTwo
   SnapData.collection.drop()
 
   workbook = Roo::Spreadsheet.open("./SnapDataTwo.xlsx")
-
   workbook.each_with_pagename do |name, sheet|
     if (name == "Demographic data_Multiple")
       headers = Hash.new
