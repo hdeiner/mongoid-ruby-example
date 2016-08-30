@@ -1,12 +1,14 @@
-class SnapDataTwo
+class SnapDataReadAndStore
   require 'roo'
   require 'mongoid'
 
+  require './account_holder'
   require './snap_data'
 
   Mongoid.load!('../mongoid.yml', :development)
 
   SnapData.collection.drop()
+  AccountHolder.collection.drop()
 
   workbook = Roo::Spreadsheet.open("./SnapDataTwo.xlsx")
   workbook.each_with_pagename do |name, sheet|
@@ -35,9 +37,48 @@ class SnapDataTwo
         billingCycle = sheet.row(row)[headers['Billing Cycle']]
         pctId = sheet.row(row)[headers['PCT ID']]
         print "Row: Fname=#{fname}, Lname=#{lname}, Mname=#{mname} dob=#{dob}, ssn=#{ssn} Address=#{address} State=#{state} City=#{city} ZipCode=#{zipCode} homePhoneNo=#{homePhoneNo} refNum=#{refNum} statusCode=#{statusCode} statusMsg=#{statusMsg} accountNo=#{accountNo} errorCodeDesc=#{errorCodeDesc} rejectCode=#{rejectCode} rejectCodeDesc=#{rejectCodeDesc} creditLimit=#{creditLimit} billingCycle=#{billingCycle} pctId=#{pctId}\n"
-        SnapData.new(fname: fname, lname: lname, mname: mname, dob: dob, ssn: ssn, address: address, state: state, zip: zipCode, homePhone: homePhoneNo, referenceNumber: refNum, statusCode: statusCode, statusMessage: statusMsg, accountNo: accountNo, rejectCode: rejectCode, rejectCodeDesc: rejectCodeDesc, creditLimit: creditLimit, billingCycle: billingCycle, pctId: pctId).save!
+
+        accountHolderId = AccountHolder.count + 1
+        snapDataId = SnapData.count + 1
+
+        AccountHolder.create(
+            id: accountHolderId,
+            fname: fname,
+            lname: lname,
+            mname: mname,
+            dob: dob,
+            ssn: ssn,
+            address: address,
+            state: state,
+            zip: zipCode,
+            homePhone: homePhoneNo,
+            snapDataId: snapDataId
+        ).save!
+
+        SnapData.new(
+            id: snapDataId,
+            referenceNumber: refNum,
+            statusCode: statusCode,
+            statusMessage: statusMsg,
+            accountNo: accountNo,
+            rejectCode: rejectCode,
+            rejectCodeDesc: rejectCodeDesc,
+            creditLimit: creditLimit,
+            billingCycle: billingCycle,
+            pctId: pctId,
+            accountHolderId: accountHolderId
+        ).save!
       end
     end
   end
+
+  puts "\nAccounts rejected\n"
+  snapDatas = SnapData.where(:rejectCode.nin => ["", nil])
+  snapDatas.each { |snapData|
+    accounts = AccountHolder.where(id: snapData.accountHolderId)
+    accounts.each { |account|
+      puts account.fname + " " + account.lname + " " + snapData.accountNo.to_s + " " + snapData.rejectCode + " " + snapData.rejectCodeDesc
+    }
+  }
 
 end

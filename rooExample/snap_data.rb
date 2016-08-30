@@ -1,6 +1,7 @@
 class SnapData
   include Mongoid::Document
 
+  field :id, type: Integer
   field :fname, type: String
   field :lname, type: String
   field :mname, type: String
@@ -19,6 +20,8 @@ class SnapData
   field :creditLimit, type: String
   field :billingCycle, type: String
   field :pctId, type: String
+
+  field :accountHolderId, type: Integer
 
   store_in collection: 'snapData'
 end
