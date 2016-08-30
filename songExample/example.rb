@@ -4,6 +4,8 @@ require './songExample/song'
 
 Mongoid.load!('mongoid.yml', :development)
 
+Song.collection.drop()
+
 Song.new(artist: 'Michael Holliday'                   , title: 'Starry Eyed'                                            , date: '01/29/60', weeksAtNumberOne: 1).save!
 Song.new(artist: 'Anthony Newley'                     , title: 'Why'                                                    , date: '02/05/60', weeksAtNumberOne: 4).save!
 Song.new(artist: 'Adam Faith'                         , title: 'Poor Me'                                                , date: '03/10/60', weeksAtNumberOne: 2).save!
@@ -218,5 +220,3 @@ while (rank <11) do
   puts "Rank " + rank.to_s.ljust(2," ") + " artist " + songsToArtist[rank-1][0].ljust(30," ") + " number of songs " + songsToArtist[rank-1][1].to_s
   rank += 1
 end
-
-Song.collection.drop()

@@ -6,6 +6,8 @@ class SnapDataTwo
 
   Mongoid.load!('../mongoid.yml', :development)
 
+  SnapData.collection.drop()
+
   workbook = Roo::Spreadsheet.open("./SnapDataTwo.xlsx")
 
   workbook.each_with_pagename do |name, sheet|
@@ -39,5 +41,4 @@ class SnapDataTwo
     end
   end
 
-#SnapData.collection.drop()
 end
