@@ -14,6 +14,7 @@ GEM
     builder (3.2.2)
     i18n (0.7.0)
     json (1.8.3)
+    mini_portile2 (2.1.0)
     minitest (5.9.0)
     mongo (2.3.0)
       bson (~> 4.1)
@@ -22,7 +23,15 @@ GEM
       mongo (~> 2.1)
       origin (~> 2.2)
       tzinfo (>= 0.3.37)
+    nokogiri (1.6.8)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
     origin (2.2.0)
+    pkg-config (1.1.7)
+    roo (2.5.1)
+      nokogiri (~> 1)
+      rubyzip (~> 1.1, < 2.0.0)
+    rubyzip (1.2.0)
     thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -32,6 +41,7 @@ PLATFORMS
 
 DEPENDENCIES
   mongoid
+  roo
 
 BUNDLED WITH
-   1.12.1
+   1.12.5

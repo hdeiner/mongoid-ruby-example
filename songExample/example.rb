@@ -1,6 +1,6 @@
 require 'mongoid'
 
-require './song'
+require './songExample/song'
 
 Mongoid.load!('mongoid.yml', :development)
 
